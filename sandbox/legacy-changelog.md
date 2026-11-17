@@ -1,0 +1,171 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.7.0] - 2026-11-05
+
+### <!-- 7 -->Dependencies
+- Update all non-major dependencies by @renovate[bot] in
+  [#29](https://github.com/f4z3r/agentic-factory/pull/29)
+- Update all non-major dependencies by @renovate[bot] in
+  [#30](https://github.com/f4z3r/agentic-factory/pull/30)
+
+## [0.6.0] - 2026-10-05
+
+### <!-- 7 -->Dependencies
+- Update all non-major dependencies by @renovate[bot] in
+  [#25](https://github.com/f4z3r/agentic-factory/pull/25)
+- Update orhun/git-cliff-action digest to a9a9552 by @renovate[bot] in [#26](https://github.com/f4z3r/agentic-factory/pull/26)
+- Update dependency @earendil-works/pi-coding-agent to v1 by @renovate[bot] in [#27](https://github.com/f4z3r/agentic-factory/pull/27)
+- Update archlinux to base-20260927.0.600689 by @f4z3r in
+  [#28](https://github.com/f4z3r/agentic-factory/pull/28)
+
+## [0.5.4] - 2026-08-30
+
+### <!-- 7 -->Dependencies
+- Update base archlinux image to 20260823 by @f4z3r in
+  [#24](https://github.com/f4z3r/agentic-factory/pull/24)
+
+## [0.5.3] - 2026-08-30
+
+### <!-- 7 -->Dependencies
+- Update all non-major dependencies by @renovate[bot] in
+  [#21](https://github.com/f4z3r/agentic-factory/pull/21)
+- Update dependency sigstore/cosign to v3 by @renovate[bot] in [#23](https://github.com/f4z3r/agentic-factory/pull/23)
+- Update actions/checkout digest to 3d3c42e by @renovate[bot] in [#22](https://github.com/f4z3r/agentic-factory/pull/22)
+
+## [0.5.2] - 2026-06-30
+
+### <!-- 7 -->Dependencies
+- Update dependency @earendil-works/pi-coding-agent to v0.80.2 by @renovate[bot] in [#20](https://github.com/f4z3r/agentic-factory/pull/20)
+
+## [0.5.1] - 2026-06-23
+
+### <!-- 7 -->Dependencies
+- Update actions/checkout action to v7 by @renovate[bot] in
+  [#19](https://github.com/f4z3r/agentic-factory/pull/19)
+- Update all non-major dependencies by @renovate[bot] in
+  [#18](https://github.com/f4z3r/agentic-factory/pull/18)
+
+## [0.5.0] - 2026-06-12
+
+### <!-- 0 -->Features
+- Remove pi-web-access again by @f4z3r
+
+### <!-- 3 -->Documentation
+- Update for extension installation by @f4z3r
+
+## [0.4.0] - 2026-06-09
+
+### <!-- 0 -->Features
+- Enable web-access pi extension by @f4z3r
+
+### <!-- 7 -->Dependencies
+- Update all non-major dependencies to v0.78.1 by @renovate[bot] in [#16](https://github.com/f4z3r/agentic-factory/pull/16)
+- Update actions/checkout digest to df4cb1c by @renovate[bot] in [#17](https://github.com/f4z3r/agentic-factory/pull/17)
+
+## [0.3.0] - 2026-05-28
+
+### <!-- 0 -->Features
+- Add mise as a tool by @f4z3r
+
+## [0.2.4] - 2026-05-28
+
+### <!-- 1 -->Bug Fixes
+- Add cargo bin path to PATH by @f4z3r
+
+## [0.2.3] - 2026-05-28
+
+### <!-- 7 -->Dependencies
+- Update dependency @earendil-works/pi-coding-agent to v0.75.5 by @renovate[bot] in [#15](https://github.com/f4z3r/agentic-factory/pull/15)
+
+## [0.2.2] - 2026-05-25
+
+### <!-- 7 -->Dependencies
+- Update all non-major dependencies by @renovate[bot] in
+  [#12](https://github.com/f4z3r/agentic-factory/pull/12)
+- Update dependency @earendil-works/pi-coding-agent to v0.75.4 by @renovate[bot] in [#13](https://github.com/f4z3r/agentic-factory/pull/13)
+
+### <!-- 8 -->Miscellaneous Tasks
+- Add npm updates to setup by @f4z3r
+- Migrate config renovate.json by @renovate[bot] in [#14](https://github.com/f4z3r/agentic-factory/pull/14)
+- Ensure dependency updates are present in the changelog by @f4z3r
+
+## [0.2.1] - 2026-05-19
+
+### <!-- 0 -->Features
+- Update pi-coding-agent to version 0.75.3 by @f4z3r
+- Update archlinux base image to 20260517 by @f4z3r
+
+### <!-- 7 -->Dependencies
+- Update actions/checkout action to v6 by @renovate[bot] in
+  [#6](https://github.com/f4z3r/agentic-factory/pull/6)
+- Update docker/build-push-action action to v7 by @renovate[bot] in [#7](https://github.com/f4z3r/agentic-factory/pull/7)
+- Update docker/login-action action to v4 by @renovate[bot] in [#8](https://github.com/f4z3r/agentic-factory/pull/8)
+- Update docker/metadata-action action to v6 by @renovate[bot] in [#9](https://github.com/f4z3r/agentic-factory/pull/9)
+- Update docker/setup-buildx-action action to v4 by @renovate[bot] in [#10](https://github.com/f4z3r/agentic-factory/pull/10)
+- Update sigstore/cosign-installer action to v4 by @renovate[bot] in [#11](https://github.com/f4z3r/agentic-factory/pull/11)
+
+## [0.2.0] - 2026-05-13
+
+### <!-- 0 -->Features
+- Allow internal user within container to run pacman by @f4z3r
+
+### <!-- 7 -->Dependencies
+- Pin archlinux docker tag to 5ba8bb3 by @renovate[bot] in
+  [#2](https://github.com/f4z3r/agentic-factory/pull/2)
+- Update actions/checkout digest to 93cb6ef by @renovate[bot] in [#3](https://github.com/f4z3r/agentic-factory/pull/3)
+
+### <!-- 8 -->Miscellaneous Tasks
+- "pin" versions for npm and cargo installs by @f4z3r
+- Add renovate.json by @renovate[bot] in [#1](https://github.com/f4z3r/agentic-factory/pull/1)
+
+### New Contributors
+* @renovate[bot] made their first contribution in [#3](https://github.com/f4z3r/agentic-factory/pull/3)
+
+## [0.1.0] - 2026-05-08
+
+### <!-- 0 -->Features
+- Add nvim basic configuration for easier prompting in editor by @f4z3r
+
+### <!-- 3 -->Documentation
+- Update image reference in usage information by @f4z3r
+
+### <!-- 8 -->Miscellaneous Tasks
+- Automatically generate changelogs by @f4z3r
+
+### New Contributors
+* @github-actions[bot] made their first contribution
+
+## [0.1.0-rc0] - 2026-05-07
+
+### <!-- 0 -->Features
+- Add nvim as default editor by @f4z3r
+
+### <!-- 8 -->Miscellaneous Tasks
+- Initial commit by @f4z3r
+- Setup build pipeline for image by @f4z3r
+
+### New Contributors
+* @f4z3r made their first contribution
+
+[0.7.0]: https://github.com/f4z3r/agentic-factory/compare/v0.6.0...v0.7.0
+[0.6.0]: https://github.com/f4z3r/agentic-factory/compare/v0.5.4...v0.6.0
+[0.5.4]: https://github.com/f4z3r/agentic-factory/compare/v0.5.3...v0.5.4
+[0.5.3]: https://github.com/f4z3r/agentic-factory/compare/v0.5.2...v0.5.3
+[0.5.2]: https://github.com/f4z3r/agentic-factory/compare/v0.5.1...v0.5.2
+[0.5.1]: https://github.com/f4z3r/agentic-factory/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/f4z3r/agentic-factory/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/f4z3r/agentic-factory/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/f4z3r/agentic-factory/compare/v0.2.4...v0.3.0
+[0.2.4]: https://github.com/f4z3r/agentic-factory/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/f4z3r/agentic-factory/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/f4z3r/agentic-factory/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/f4z3r/agentic-factory/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/f4z3r/agentic-factory/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/f4z3r/agentic-factory/compare/v0.1.0-rc0...v0.1.0
+[0.1.0-rc0]: https://github.com/f4z3r/agentic-factory/tree/v0.1.0-rc0
+
+<!-- generated by git-cliff -->

@@ -2,53 +2,77 @@
 
 <!-- <img src="./assets/img/logo.png" alt="Gruvbox Material" width="40%"> -->
 
-# Pi Coding Agent OCI Image
+# Agentic Factory
 
-### An image I am using to sort of isolate my Pi coding agents from my actual system.
+### A setup to develop securely using AI agents
 
-[How to Use](#how-to-use) | [How to Build](#how-to-build)
+[Architecture](#architecture) | [Usage](#usage)
 
 <hr />
 </div>
 
-> [!WARNING]
->
-> Use at your own risk. There are pretty easy ways the agent can escape this container as soon as
-> you mount any file to it. It still allows me to ensure it does not polute my system and only has
-> access to the files assuming the agent is not trying to hack me.
+A local, containerized development environment for [Pi](https://github.com/earendil-works/pi),
+managed with rootless Podman. Pi runs in a disposable sandbox;
+[agentgateway](https://agentgateway.dev/) provides a single endpoint for inference and MCP tools.
+All stack configuration lives in this repository, independently of NixOS.
 
-## How to Use
+## Architecture
 
-I use it to have:
-
-- Access to my central Pi configuration.
-- Access to the files in the current directory.
-
-Note that the image has users and groups preconfigured so that it does not conflict with users on my
-system. This might not work for you.
-
-```bash
-# create a mise cache
-docker volume create mise-cache
-# run the docker container
-docker run --rm \
-  -it \
-  -e OPENROUTER_API_KEY -e BRAVE_API_KEY \
-  -v mise-cache:/home/f4z3r/.local/share/mise \
-  -v ~/.pi:/home/f4z3r/.pi \
-  -v ~/notes/resources/ai/:/home/f4z3r/notes/resources/ai \
-  -v .:/home/f4z3r/workspace \
-  ghcr.io/f4z3r/pi-agent-image:v0.2.0 \
-  pi
+```text
+                       +-----------------------+
+                       |      Pi sandbox       |
+                       |  shell, git, mise     |
+                       |  no API credentials   |
+                       +-----+------------+----+
+                             |            |
+                     LLM + MCP|            +----> Public internet
+                             |                   (mise, dependencies, git)
+                       +-----v-----------+
+                       |  agentgateway   |
+                       | routing, policy |
+                       +----+---------+--+
+                            |         |
+                      Inference       MCP
+                            |         |
+                       Providers   MCP containers
+                                    (Kubernetes, etc.)
 ```
 
-Note that since the container is expected to mount the `~/.pi` directory, we do not install
-extensions directly in the image as these would be overwritten by the mount.
+| Component          | Responsibility                                                                                                                          |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pi**             | Interactive coding agent with a mounted project workspace, persistent `mise` cache, and direct internet access for development tooling. |
+| **agentgateway**   | Central entry point for model inference and MCP tools; holds inference-provider credentials and applies tool policies.                  |
+| **MCP containers** | Expose specific capabilities. Each service holds only the credentials it needs (e.g. a read-only Kubernetes kubeconfig).                |
+| **Podman Compose** | Starts and connects the containers using rootless Podman; no application configuration in NixOS.                                        |
 
-## How to Build
+## Usage
 
-Images are released to the GitHub container registry. If want to build it locally nonetheless:
+Requires Podman and a Compose provider (e.g. `podman-compose`). Once the Compose stack is
+configured:
 
-```bash
-docker build -t pi-agent-image:test .
+```sh
+# Start the gateway and MCP services
+podman compose up -d
+
+# From a project directory, launch an ephemeral Pi session
+PI_WORKSPACE="$PWD" podman compose -f /path/to/pi-agent-image/compose.yaml run --rm pi
 ```
+
+Configure providers and MCP servers in `config/`; keep real credentials in Git-ignored `secrets/`.
+Pi points only to agentgateway for inference and MCP, and receives no provider keys or kubeconfigs.
+Do not mount the host's `~/.pi` or other credential directories into Pi.
+
+## Security model
+
+Pi runs as a regular user in a rootless container, with passwordless `sudo` available _inside_ the
+container for development tooling. Only the selected project workspace and required caches are
+mounted. Gateway administration is not exposed to Pi; backend permissions (such as Kubernetes RBAC)
+enforce what MCP tools can actually do.
+
+Pi **does have public internet access** for `mise install`, package managers, and Git. Rootless
+containers and separate Podman networks reduce exposure but are **not** a hard boundary against
+host-reachable internal services or data exfiltration. Do not mount sensitive files; use explicit
+egress controls if stronger network isolation is required.
+
+See [ADR 0001](docs/adr/0001-sandbox-and-networking.md) and
+[ADR 0002](docs/adr/0002-centralized-gateway.md) for rationale.

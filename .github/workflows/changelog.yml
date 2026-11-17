@@ -21,9 +21,9 @@ jobs:
         uses: orhun/git-cliff-action@a9a95522b26fe6403f7bb24031f21fb573d0f5ff # v4
         with:
           config: cliff.toml
-          args: --verbose
+          args: --verbose --include-path "sandbox/"
         env:
-          OUTPUT: CHANGELOG.md
+          OUTPUT: sandbox/CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
       - name: Commit
         run: |
@@ -31,6 +31,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           set +e
-          git add CHANGELOG.md
+          git add sandbox/CHANGELOG.md
           git commit -m "chore(git-cliff): update changelog"
           git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git main

@@ -117,6 +117,11 @@ sessions.
 The gateway UI is available at [http://localhost:4001/ui/](http://localhost:4001/ui/) for inspecting
 configuration, analytics, and request logs.
 
+> **Note:** If the MCPs or agentgateway fail to start, it is likely due to configuration files on
+> the system not being world readable. Podman uses a user mapping, so containers cannot read their
+> own configuration unless those files are world readable. This does not apply to files under
+> `secrets/`, which should have permissions `600`.
+
 ### Launch an agent
 
 From the project you want to work on:

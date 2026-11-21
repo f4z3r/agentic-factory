@@ -1,0 +1,12 @@
+port = "8080"
+read_only = true
+
+kubeconfig = "/secrets/kubeconfig"
+cluster_auth_mode = "kubeconfig"
+
+toolsets = ["core"]
+
+[[denied_resources]]
+group = ""
+version = "v1"
+kind = "Secret"

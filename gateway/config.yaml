@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+gateways:
+  default:
+    port: 4000
+  ui-gateway:
+    port: 4001
+ui:
+  gateways:
+    - ui-gateway
+config:
+  storage:
+    mode: readOnly
+  database:
+    url: sqlite:///data/data.db
+llm:
+  models:
+    - name: "*"
+      provider: openrouter
+      params:
+        apiKey: $OPENROUTER_API_KEY
+  policies:
+    cors:
+      allowOrigins:
+        - http://localhost:4001
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - GET
+        - POST
+mcp:
+  policies:
+    mcpAuthorization:
+      rules:
+        - >
+          mcp.tool.target == "kubernetes" && mcp.tool.name in [
+
+            "resources_get",
+            "resources_list",
+            "pods_log"
+          ]
+
+    cors:
+      allowOrigins:
+        - http://localhost:4001
+      allowHeaders:
+        - "*"
+      allowMethods:
+        - GET
+        - POST
+      exposeHeaders:
+        - Mcp-Session-Id
+  targets:
+    - name: kubernetes
+      mcp:
+        host: http://mcp-kubernetes:8080/mcp

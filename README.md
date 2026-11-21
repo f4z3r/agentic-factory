@@ -1,6 +1,6 @@
 <div align="center">
 
-<!-- <img src="./assets/img/logo.png" alt="Gruvbox Material" width="40%"> -->
+<img src="./assets/img/logo.png" alt="Agentic Factory" width="60%">
 
 # Agentic Factory
 
@@ -11,68 +11,160 @@
 <hr />
 </div>
 
-A local, containerized development environment for [Pi](https://github.com/earendil-works/pi),
-managed with rootless Podman. Pi runs in a disposable sandbox;
-[agentgateway](https://agentgateway.dev/) provides a single endpoint for inference and MCP tools.
-All stack configuration lives in this repository, independently of NixOS.
+A local environment for running multiple sandboxed AI coding agents with centralized access to
+inference providers, tools, and infrastructure.
+
+The core idea is simple: **agents have no credentials or privileged access.** Instead, they interact
+with a shared gateway that manages credentials, policies, guardrails, and available capabilities.
+
+The entire environment runs on rootless [Podman](https://podman.io/) and is configured independently
+of the host operating system.
 
 ## Architecture
 
-```text
-                       +-----------------------+
-                       |      Pi sandbox       |
-                       |  shell, git, mise     |
-                       |  no API credentials   |
-                       +-----+------------+----+
-                             |            |
-                     LLM + MCP|            +----> Public internet
-                             |                   (mise, dependencies, git)
-                       +-----v-----------+
-                       |  agentgateway   |
-                       | routing, policy |
-                       +----+---------+--+
-                            |         |
-                      Inference       MCP
-                            |         |
-                       Providers   MCP containers
-                                    (Kubernetes, etc.)
+```mermaid
+graph TD
+    subgraph Agents
+        A[Pi Agent A<br/>Project A] --> A_S[Sandbox<br/>No Secrets]
+        B[Pi Agent B<br/>Project B] --> B_S[Sandbox<br/>No Secrets]
+    end
+
+    A_S -->|LLM API/MCP| AG[agentgateway]
+    B_S -->|LLM API/MCP| AG
+
+    AG -->|Inference Provider| openrouter[OpenRouter]
+    AG -->|Inference Provider| vllm[vLLM]
+    AG -->|MCP| k8s_mcp[K8s MCP]
+    k8s_mcp -->|REST| k8s[Kubernetes]
+    AG -->|MCP| jira_mcp[Jira MCP]
+    jira_mcp -->|REST| jira[Jira]
+    AG -->|MCP| other_mcp[Other MCP Server]
 ```
 
-| Component          | Responsibility                                                                                                                          |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Pi**             | Interactive coding agent with a mounted project workspace, persistent `mise` cache, and direct internet access for development tooling. |
-| **agentgateway**   | Central entry point for model inference and MCP tools; holds inference-provider credentials and applies tool policies.                  |
-| **MCP containers** | Expose specific capabilities. Each service holds only the credentials it needs (e.g. a read-only Kubernetes kubeconfig).                |
-| **Podman Compose** | Starts and connects the containers using rootless Podman; no application configuration in NixOS.                                        |
+## Repository structure
+
+- **compose.yaml** — Podman Compose definition for `agentgateway`, MCP services, and the `pi`
+  profile. Located at the repository root; run this command from there or adjust `-f` accordingly.
+- **gateway/** — agentgateway configuration.
+- **mcp/** — MCP server configurations. Each MCP server gets its own container entry in
+  `compose.yaml`.
+- **sandbox/** — Builds the Pi agent image via `Dockerfile` and stores config files under `config/`.
+  The Pi container image is **built from `sandbox/`**; never pass secrets into the sandbox.
+- **secrets/** — Provider credentials (`gateway.env`); excluded from Git and never mounted into
+  agent sandboxes.
+
+### Components
+
+| Component          | Responsibility                                                                                                                                                        |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pi sandbox**     | Ephemeral development environment with shell access, persistent tooling caches, and a mounted project workspace. Multiple independent instances can run concurrently. |
+| **agentgateway**   | Shared entry point for inference and MCP, providing routing, credentials, tool authorization, policies, and centralized analytics/logging.                            |
+| **MCP services**   | Independently deployed containers exposing specific capabilities to agents. Accessible through the gateway, not directly from the agent containers.                   |
+| **Podman Compose** | Manages the stack, persistent storage, and isolated container networks.                                                                                               |
+
+### Isolation model
+
+Each agent:
+
+- Runs in a rootless Podman container with no API keys, kubeconfigs, or host credentials.
+- Has read/write access to its mounted project workspace and persistent development tooling.
+- Can access the internet for development tasks (`mise`, Git, package managers, etc.).
+- Uses agentgateway exclusively for inference and centrally managed MCP tools.
+- Can use `sudo` inside its container without gaining host root privileges.
+
+MCP services are deployed on a separate backend network and are not directly exposed to the agent
+containers. Each service has only the credentials and permissions it requires, such as a Kubernetes
+service account with read-only RBAC permissions.
+
+**Security boundary:** This isolates credentials and managed capabilities, but it is not a complete
+network sandbox. Agents retain outbound internet access, and mounted workspace files are accessible
+to the agent. Stronger restrictions on internal network access require additional egress controls.
 
 ## Usage
 
-Requires Podman and a Compose provider (e.g. `podman-compose`). Once the Compose stack is
-configured:
+### Prerequisites
 
-```sh
-# Start the gateway and MCP services
-podman compose up -d
+- Podman (rootless)
+- A Compose provider (`podman-compose`)
+- Configured inference providers and MCP credentials
 
-# From a project directory, launch an ephemeral Pi session
-PI_WORKSPACE="$PWD" podman compose -f /path/to/pi-agent-image/compose.yaml run --rm pi
+### Gateway credentials
+
+Inference provider credentials are managed in `secrets/gateway.env` and injected into agentgateway
+through Podman Compose.
+
+For example:
+
+```dotenv
+OPENROUTER_API_KEY=your-api-key
 ```
 
-Configure providers and MCP servers in `config/`; keep real credentials in Git-ignored `secrets/`.
-Pi points only to agentgateway for inference and MCP, and receives no provider keys or kubeconfigs.
-Do not mount the host's `~/.pi` or other credential directories into Pi.
+These environment variables can be referenced in the agentgateway configuration. The `secrets/`
+directory is excluded from Git and never mounted into agent sandboxes. MCP-specific credentials are
+managed separately by their respective services.
 
-## Security model
+### Start the infrastructure
 
-Pi runs as a regular user in a rootless container, with passwordless `sudo` available _inside_ the
-container for development tooling. Only the selected project workspace and required caches are
-mounted. Gateway administration is not exposed to Pi; backend permissions (such as Kubernetes RBAC)
-enforce what MCP tools can actually do.
+From the repository root:
 
-Pi **does have public internet access** for `mise install`, package managers, and Git. Rootless
-containers and separate Podman networks reduce exposure but are **not** a hard boundary against
-host-reachable internal services or data exfiltration. Do not mount sensitive files; use explicit
-egress controls if stronger network isolation is required.
+```bash
+podman compose up -d
+```
 
-See [ADR 0001](docs/adr/0001-sandbox-and-networking.md) and
-[ADR 0002](docs/adr/0002-centralized-gateway.md) for rationale.
+This starts agentgateway and the configured MCP services. They remain available across agent
+sessions.
+
+The gateway UI is available at [http://localhost:4001/ui/](http://localhost:4001/ui/) for inspecting
+configuration, analytics, and request logs.
+
+### Launch an agent
+
+From the project you want to work on:
+
+```bash
+PI_WORKSPACE="$PWD" \
+  podman compose \
+    -f <path-to-compose.yaml> \
+    --profile agent \
+    run --rm pi
+```
+
+Each invocation starts a new isolated Pi session. Run the command from different projects or
+terminals to launch multiple agents concurrently, all using the same gateway.
+
+The workspace is mounted read/write, with UID/GID mappings preserving host file ownership.
+Development tooling installed through `mise` is cached between sessions.
+
+### Configure capabilities
+
+All configuration is managed centrally in this repository:
+
+- **Inference providers and models:** Configure agentgateway to route requests to the desired
+  providers.
+- **MCP services:** Add containers to Compose and register them as gateway targets.
+- **Policies:** Configure permitted tools and other restrictions in agentgateway.
+- **Credentials:** Provide provider secrets to agentgateway and backend credentials to the
+  respective MCP services. Never pass them into the Pi sandbox.
+
+Changes to gateway or MCP capabilities do not require rebuilding the Pi image.
+
+For adding new MCP servers, see the [Runbook: Adding MCP servers](docs/runbook-add-mcp-server.md).
+
+For adding new inference providers, see the
+[Runbook: Adding Inference Providers](docs/runbook-add-inference-provider.md).
+
+### Stop the infrastructure
+
+```bash
+podman compose down
+```
+
+Persistent volumes retain development caches and gateway data, including its SQLite analytics and
+logging database.
+
+## Design decisions
+
+The reasoning behind the architecture and its security trade-offs is documented in:
+
+- [ADR 0001 — Sandbox and networking](docs/adr/0001-sandbox-and-networking.md)
+- [ADR 0002 — Centralized gateway](docs/adr/0002-centralized-gateway.md)

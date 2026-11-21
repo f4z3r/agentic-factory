@@ -1,0 +1,13 @@
+{
+  "providers": {
+    "openrouter": {
+      "baseUrl": "http://agentgateway:4000/v1",
+      "apiKey": "unused"
+    },
+    "agentgateway": {
+      "baseUrl": "http://agentgateway:4000/v1",
+      "api": "openai-completions",
+      "apiKey": "unused"
+    }
+  }
+}

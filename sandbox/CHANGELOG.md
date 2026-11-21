@@ -6,13 +6,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-### <!-- 0 -->Features
-- Add initial gateway configuration and full setup by @f4z3r
-
-### <!-- 1 -->Bug Fixes
-- Move neovim configuration into the build context by @f4z3r
-- Update MCP tools to always be directly available by @f4z3r
-
 ### <!-- 8 -->Miscellaneous Tasks
 - Restructure repository to contain a full agentic factory by @f4z3r
 

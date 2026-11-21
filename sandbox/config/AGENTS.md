@@ -36,3 +36,5 @@
 - You MUST NEVER edit generated files by hand when a generation workflow exists.
 - You MUST ask before performing large, cross-package refactors.
 - You MUST ask before importing a new dependency into the project.
+- Ensure that Architectural Decision Records (ADRs) are written when code changes warrant a
+  documentation update or an architectural decision.

@@ -53,6 +53,13 @@ mcp:
             ]
 
         - allow: 'mcp.tool.target == "context7" && mcp.tool.name in ["resolve-library-id", "query-docs"]'
+        - allow: >
+            mcp.tool.target == "atlassian" && mcp.tool.name in [
+              "jira_search",
+              "jira_get_issue",
+              "confluence_search",
+              "confluence_get_page"
+            ]
     cors:
       allowOrigins:
         - http://localhost:4001
@@ -64,6 +71,9 @@ mcp:
       exposeHeaders:
         - Mcp-Session-Id
   targets:
+    - name: atlassian
+      mcp:
+        host: http://mcp-atlassian:8000/mcp
     - name: kubernetes
       mcp:
         host: http://mcp-kubernetes:8080/mcp

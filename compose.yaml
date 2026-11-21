@@ -32,6 +32,27 @@ services:
       - pi-backend
     security_opt:
       - no-new-privileges:true
+  mcp-atlassian:
+    image: ghcr.io/sooperset/mcp-atlassian:v0.24.7
+    restart: unless-stopped
+    command:
+      - --transport
+      - streamable-http
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+    env_file:
+      - ./secrets/atlassian.env
+    environment:
+      READ_ONLY_MODE: "true"
+      ALLOW_GLOBAL_CRED_FALLBACK: "true"
+      TOOLSETS: "default"
+      ENABLED_TOOLS: "jira_search,jira_get_issue,confluence_search,confluence_get_page"
+    networks:
+      - pi-backend
+    security_opt:
+      - no-new-privileges:true
   pi:
     image: ghcr.io/f4z3r/pi-agent-image:latest
     userns_mode: "keep-id:uid=1000,gid=1000"

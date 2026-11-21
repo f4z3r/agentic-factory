@@ -60,6 +60,16 @@ mcp:
               "confluence_search",
               "confluence_get_page"
             ]
+        - allow: >
+            mcp.tool.target == "argocd" && mcp.tool.name in [
+              // NEVER expose any tool that might read a Kubernetes secret accidentally
+              "list_applications",
+              "get_application",
+              "get_application_resource_tree",
+              "get_application_events",
+              "get_application_workload_logs",
+              "get_resource_events"
+            ]
     cors:
       allowOrigins:
         - http://localhost:4001
@@ -83,3 +93,6 @@ mcp:
       policies:
         backendAuth:
           key: "$CONTEXT7_API_KEY"
+    - name: argocd
+      mcp:
+        host: http://mcp-argocd:3000/mcp

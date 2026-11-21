@@ -53,6 +53,21 @@ services:
       - pi-backend
     security_opt:
       - no-new-privileges:true
+  mcp-argocd:
+    image: ghcr.io/argoproj-labs/mcp-for-argocd:0.9.0
+    restart: unless-stopped
+    command:
+      - http
+      - --allow-unauthenticated
+    env_file:
+      - ./secrets/argocd.env
+    environment:
+      MCP_BIND_ADDRESS: "0.0.0.0"
+      MCP_READ_ONLY: "true"
+    networks:
+      - pi-backend
+    security_opt:
+      - no-new-privileges:true
   pi:
     image: ghcr.io/f4z3r/pi-agent-image:latest@sha256:1aa72bcb2d824b2373c181f2a0937565dfb4801111f6b21d14d9e7a34d66e7a2
     userns_mode: "keep-id:uid=1000,gid=1000"

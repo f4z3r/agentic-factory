@@ -3,7 +3,7 @@ x-podman:
   in_pod: false
 services:
   agentgateway:
-    image: cr.agentgateway.dev/agentgateway:v1.7.0
+    image: cr.agentgateway.dev/agentgateway:v1.7.0@sha256:60216aafb03d37f94e952ff3d51d2f630a65b10ecaebdc0a864882f92610c45b
     restart: unless-stopped
     command: ["-f", "/config.yaml"]
     ports:
@@ -20,7 +20,7 @@ services:
     security_opt:
       - no-new-privileges:true
   mcp-kubernetes:
-    image: ghcr.io/containers/kubernetes-mcp-server:v0.1.3
+    image: ghcr.io/containers/kubernetes-mcp-server:v0.1.3@sha256:6347155616c49c78512114500688b50d275ddde7597b6a38cefe6f40a8c42c16
     restart: unless-stopped
     command:
       - --config
@@ -33,7 +33,7 @@ services:
     security_opt:
       - no-new-privileges:true
   pi:
-    image: ghcr.io/f4z3r/pi-agent-image:latest
+    image: ghcr.io/f4z3r/pi-agent-image:latest@sha256:1aa72bcb2d824b2373c181f2a0937565dfb4801111f6b21d14d9e7a34d66e7a2
     userns_mode: "keep-id:uid=1000,gid=1000"
     user: "1000:1000"
     cap_drop:

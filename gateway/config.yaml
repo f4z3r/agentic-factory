@@ -52,6 +52,7 @@ mcp:
               "tekton_taskrun_logs",         // tekton: allow to get tekton logs for debugging
             ]
 
+        - allow: 'mcp.tool.target == "context7" && mcp.tool.name in ["resolve-library-id", "query-docs"]'
     cors:
       allowOrigins:
         - http://localhost:4001
@@ -66,3 +67,9 @@ mcp:
     - name: kubernetes
       mcp:
         host: http://mcp-kubernetes:8080/mcp
+    - name: context7
+      mcp:
+        host: https://mcp.context7.com/mcp
+      policies:
+        backendAuth:
+          key: "$CONTEXT7_API_KEY"

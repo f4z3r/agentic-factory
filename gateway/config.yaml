@@ -31,13 +31,26 @@ mcp:
   policies:
     mcpAuthorization:
       rules:
-        - >
-          mcp.tool.target == "kubernetes" && mcp.tool.name in [
-
-            "resources_get",
-            "resources_list",
-            "pods_log"
-          ]
+        - allow: >
+            mcp.tool.target == "kubernetes" && mcp.tool.name in [
+              // general: NEVER allow to create, update, or delete resources
+              "configuration_contexts_list", // config: allow getting contexts, do not allow reading config
+              "events_list",                 // core: allow to list events for debugging
+              "namespaces_list",             // core: allow to list namespaces for discovery
+              "projects_list",               // core: allow to list projects for discovery
+              "pods_list",                   // core: allow to list pods for discovery
+              "pods_list_in_namespace",      // core: allow to list pods for discovery
+              "pods_get",                    // core: allow to list pods for discovery
+              "pods_top",                    // core: allow to top pods for debugging
+              "pods_log",                    // core: allow to get logs from pods for debugging
+              "resources_list",              // core: allow to list resources for discovery
+              "resources_get",               // core: allow to list resources for discovery
+              "api_resources_list",          // core: allow to list resource APIs for discovery
+              "helm_list",                   // helm: allow to list helm installs for discovery
+              "tekton_pipelinerun_logs",     // tekton: allow to get tekton logs for debugging
+              "tekton_pipelinerun_diagnose", // tekton: allow to get tekton logs for debugging
+              "tekton_taskrun_logs",         // tekton: allow to get tekton logs for debugging
+            ]
 
     cors:
       allowOrigins:

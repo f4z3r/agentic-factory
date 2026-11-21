@@ -4,7 +4,7 @@ read_only = true
 kubeconfig = "/secrets/kubeconfig"
 cluster_auth_mode = "kubeconfig"
 
-toolsets = ["core"]
+toolsets = ["config", "core", "helm", "tekton"]
 
 [[denied_resources]]
 group = ""

@@ -1,7 +1,9 @@
 {
   "mcpServers": {
-    "agentgateway": {
-      "url": "http://agentgateway:4000/mcp"
+    "main": {
+      "url": "http://agentgateway:4000/mcp",
+      "description": "Main MCP server providing all the tools that this agent might need.",
+      "exposure": "direct"
     }
   }
 }

@@ -44,11 +44,7 @@ services:
       - "8000"
     env_file:
       - ./secrets/atlassian.env
-    environment:
-      READ_ONLY_MODE: "true"
-      ALLOW_GLOBAL_CRED_FALLBACK: "true"
-      TOOLSETS: "default"
-      ENABLED_TOOLS: "jira_search,jira_get_issue,confluence_search,confluence_get_page"
+      - ./mcp/atlassian/config.env
     networks:
       - pi-backend
     security_opt:
@@ -61,9 +57,7 @@ services:
       - --allow-unauthenticated
     env_file:
       - ./secrets/argocd.env
-    environment:
-      MCP_BIND_ADDRESS: "0.0.0.0"
-      MCP_READ_ONLY: "true"
+      - ./mcp/argocd/config.env
     networks:
       - pi-backend
     security_opt:

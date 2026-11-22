@@ -44,14 +44,11 @@ graph TD
 ## Repository structure
 
 - **compose.yaml** — Podman Compose definition for `agentgateway`, MCP services, and the `pi`
-  profile. Located at the repository root; run this command from there or adjust `-f` accordingly.
+  profile.
 - **gateway/** — agentgateway configuration.
-- **mcp/** — MCP server configurations. Each MCP server gets its own container entry in
-  `compose.yaml`.
+- **mcp/** — MCP server configurations.
 - **sandbox/** — Builds the Pi agent image via `Dockerfile` and stores config files under `config/`.
-  The Pi container image is **built from `sandbox/`**; never pass secrets into the sandbox.
-- **secrets/** — Provider credentials (`gateway.env`); excluded from Git and never mounted into
-  agent sandboxes.
+- **secrets/** — Provider credentials (`gateway.env`).
 
 ### Components
 
@@ -79,6 +76,21 @@ service account with read-only RBAC permissions.
 **Security boundary:** This isolates credentials and managed capabilities, but it is not a complete
 network sandbox. Agents retain outbound internet access, and mounted workspace files are accessible
 to the agent. Stronger restrictions on internal network access require additional egress controls.
+
+## MCP Servers
+
+### Current MCP Servers and Their Purposes
+
+The following MCP servers are currently configured along with their purposes:
+
+- **ArgoCD**: Manages deployments and application lifecycle for Kubernetes resources.
+- **Kubernetes**: Facilitates interaction with Kubernetes clusters, specifically for resource
+  management.
+- **Atlassian**: Offers integration with Atlassian products like Jira and Confluence.
+- **Context7**: Provides up to date documentation of tooling.
+
+> In the Gateway, we generally restrict MCP actions to be read-only to enhance security and prevent
+> unauthorized modifications.
 
 ## Usage
 

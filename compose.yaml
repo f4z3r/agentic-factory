@@ -33,7 +33,7 @@ services:
     security_opt:
       - no-new-privileges:true
   mcp-atlassian:
-    image: ghcr.io/sooperset/mcp-atlassian:0.24.7@sha256:40e8470584820a32f7e385dadc38bf263536e0ec536f9915bd9036dae1807fb6
+    image: ghcr.io/sooperset/mcp-atlassian:0.24.8@sha256:a62b1725c31ef2ac50074eb8b1dac88f9167fa56901b2dfa0a45414225e3431b
     restart: unless-stopped
     command:
       - --transport

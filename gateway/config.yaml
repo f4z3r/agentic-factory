@@ -27,6 +27,16 @@ llm:
       allowMethods:
         - GET
         - POST
+    guardrails:
+      request:
+        - regex:
+            action: mask
+            rules:
+              - builtin: email
+              - builtin: phoneNumber
+              - builtin: caSin
+              - builtin: ssn
+              - builtin: creditCard
 mcp:
   policies:
     mcpAuthorization:

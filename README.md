@@ -88,6 +88,7 @@ The following MCP servers are currently configured along with their purposes:
   management.
 - **Atlassian**: Offers integration with Atlassian products like Jira and Confluence.
 - **Context7**: Provides up to date documentation of tooling.
+- **GitHub**: Get access to private GitHub content.
 
 > In the Gateway, we generally restrict MCP actions to be read-only to enhance security and prevent
 > unauthorized modifications.

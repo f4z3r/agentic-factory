@@ -80,6 +80,42 @@ mcp:
               "get_application_workload_logs",
               "get_resource_events"
             ]
+        - allow: >
+            mcp.tool.target == "github" && mcp.tool.name in [
+              // actions
+              "actions_get",
+              "actions_list",
+              "get_job_logs",
+              // git
+              "get_repository_tree",
+              // issues
+              "get_label",
+              "issue_read",
+              "list_issue_fields",
+              "list_issue_types",
+              "list_issue",
+              "search_issues",
+              // PRs
+              "list_pull_requests",
+              "pull_request_read",
+              "search_pull_requests",
+              // Repos
+              "get_commit",
+              "get_file_contents",
+              "get_latest_release",
+              "get_release_by_tag",
+              "get_tag",
+              "list_branches",
+              "list_commits",
+              "list_releases",
+              "list_repository_collaborators",
+              "list_tags",
+              "search_code",
+              "search_commits",
+              "search_repositories",
+              // Users
+              "search_users",
+            ]
     cors:
       allowOrigins:
         - http://localhost:4001
@@ -106,3 +142,9 @@ mcp:
     - name: argocd
       mcp:
         host: http://mcp-argocd:3000/mcp
+    - name: github
+      mcp:
+        host: https://api.githubcopilot.com/mcp/
+      policies:
+        backendAuth:
+          key: "$GITHUB_PAT"

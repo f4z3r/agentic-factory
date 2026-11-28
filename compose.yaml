@@ -20,7 +20,7 @@ services:
     security_opt:
       - no-new-privileges:true
   mcp-memory:
-    image: ghcr.io/basicmachines-co/basic-memory:1.0.0
+    image: ghcr.io/basicmachines-co/basic-memory:1.0.0@sha256:cad49f5433bcd8592fea547907a2b967435b3fa60d0f81ebc4d558e2b5cb55a8
     restart: unless-stopped
     command:
       - basic-memory

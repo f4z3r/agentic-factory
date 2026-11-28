@@ -1,13 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices", "group:allNonMajor"],
+  "packageRules": [
+    {
+      "description": "Handle Arch Linux calendar-based image tags",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["archlinux"],
+      "versioning": "regex:^base-(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.(?<build>\\d+)\\.(?<revision>\\d+)$"
+    }
+  ],
   "customManagers": [
     {
-      "description": "Update npm packages within the dockerfile",
+      "description": "Update npm packages within the Dockerfile",
       "customType": "regex",
-      "managerFilePatterns": [
-        "/^Dockerfile$/"
-      ],
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
       "matchStrings": ["(?<depName>@\\S+)@(?<currentValue>\\S+)"],
       "datasourceTemplate": "npm"
     }

@@ -1,4 +1,4 @@
-FROM archlinux:base-20260927.0.600689@sha256:eb8f6dcc89a38977c9735f10fcf6ae4afe496283e7008eb7a3420cdba31fbd04
+FROM archlinux:base-20261122.0.629543@sha256:bddb91b7a73f31ed6be307fc8ec75e5dd59ff8ccf6c5a1bbb8205f14702c6b4a
 
 RUN pacman --noconfirm -Suy nodejs-lts-krypton npm \
       sudo \
@@ -12,7 +12,7 @@ RUN pacman --noconfirm -Suy nodejs-lts-krypton npm \
       prettier \
       neovim \
       mise \
-    && npm install -g @earendil-works/pi-coding-agent@1.5.0 @wcj/html-to-markdown@2.1.1 \
+    && npm install -g @earendil-works/pi-coding-agent@1.7.0 @wcj/html-to-markdown@2.1.1 \
     && groupadd -g 100 f4z3r \
     && useradd -u 1000 -g 100 -m f4z3r \
     && usermod -aG wheel f4z3r \

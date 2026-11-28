@@ -248,5 +248,6 @@ logging database.
 
 The reasoning behind the architecture and its security trade-offs is documented in:
 
-- [ADR 0001 — Sandbox and networking](docs/adr/0001-sandbox-and-networking.md)
-- [ADR 0002 — Centralized gateway](docs/adr/0002-centralized-gateway.md)
+- [ADR 0001 — Sandbox and networking](./docs/adr/0001-sandbox-and-networking.md)
+- [ADR 0002 — Centralized gateway](./docs/adr/0002-centralized-gateway.md)
+- [ADR 0003 — Long term memory](./docs/adr/0003-long-term-memory.md)

@@ -30,6 +30,8 @@
   with that name exists and load it before starting to work on that file.
 - You SHOULD avoid using emojis.
 - You SHOULD use check symbols (✓/) rather than emojis where needed.
+- When working with relative links, you MUST start with `./`. Thus do not use `docs/adrs/file.md`,
+  rather use `./docs/adrs/file.md`.
 
 ## General Boundaries
 

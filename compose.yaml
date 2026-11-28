@@ -82,7 +82,7 @@ services:
     security_opt:
       - no-new-privileges:true
   pi:
-    image: ghcr.io/f4z3r/pi-agent-image:latest@sha256:1aa72bcb2d824b2373c181f2a0937565dfb4801111f6b21d14d9e7a34d66e7a2
+    image: ghcr.io/f4z3r/pi-agent-image:latest@sha256:d62af7404bf6dab631ea49a3a1bf8d5aa0267386c5d71d241351fd5b7cf28238
     userns_mode: "keep-id:uid=1000,gid=1000"
     user: "1000:1000"
     cap_drop:

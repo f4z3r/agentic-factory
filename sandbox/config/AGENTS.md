@@ -38,3 +38,16 @@
 - You MUST ask before importing a new dependency into the project.
 - Ensure that Architectural Decision Records (ADRs) are written when code changes warrant a
   documentation update or an architectural decision.
+
+## Long-term Memory
+
+Use Basic Memory as a shared knowledge base across projects.
+
+- Search existing knowledge before substantial investigations.
+- Store reusable solutions, architectural decisions, and lessons learned.
+- Organize project-specific knowledge under projects/<project-name>/.
+- Store cross-project knowledge under patterns/.
+- Check for existing notes before writing new ones.
+- Never store secrets or transient session information.
+- Use the memory-capture skill when valuable knowledge should be preserved.
+- Use memory-curate when the knowledge base needs consolidation.

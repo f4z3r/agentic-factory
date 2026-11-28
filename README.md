@@ -6,7 +6,7 @@
 
 ### A setup to develop securely using AI agents
 
-[Architecture](#architecture) | [Usage](#usage)
+[Architecture](#architecture) | [Getting Started](#getting-started)
 
 <hr />
 </div>
@@ -40,6 +40,11 @@ graph TD
     jira_mcp -->|REST| jira[Jira]
     AG -->|MCP| other_mcp[Other MCP Server]
 ```
+
+- Web fetch, if desired, is installed as a Pi extension. This is an agent capability and should be
+  handled by the harness.
+- Long term and project specific memory is provided as an MCP. We use plaintext memory for
+  simplicity, which is managed within a Podman volume.
 
 ## Repository structure
 
@@ -77,12 +82,18 @@ service account with read-only RBAC permissions.
 network sandbox. Agents retain outbound internet access, and mounted workspace files are accessible
 to the agent. Stronger restrictions on internal network access require additional egress controls.
 
+> [!WARNING] Sandboxes are in the same network, meaning agents can technically talk to each other.
+> Moreover, agents share the same long-term memory MCP with each agent having access to all memory.
+> Thus, they can also communicate over that memory layer even if deployed in isolated networks. DO
+> NOT assume isolation between agents.
+
 ## MCP Servers
 
 ### Current MCP Servers and Their Purposes
 
 The following MCP servers are currently configured along with their purposes:
 
+- **basic-memory**: Manages long term memory for the agents.
 - **ArgoCD**: Manages deployments and application lifecycle for Kubernetes resources.
 - **Kubernetes**: Facilitates interaction with Kubernetes clusters, specifically for resource
   management.
@@ -93,7 +104,7 @@ The following MCP servers are currently configured along with their purposes:
 > In the Gateway, we generally restrict MCP actions to be read-only to enhance security and prevent
 > unauthorized modifications.
 
-## Usage
+## Getting Started
 
 ### Prerequisites
 
@@ -112,9 +123,17 @@ For example:
 OPENROUTER_API_KEY=your-api-key
 ```
 
-These environment variables can be referenced in the agentgateway configuration. The `secrets/`
-directory is excluded from Git and never mounted into agent sandboxes. MCP-specific credentials are
-managed separately by their respective services.
+These environment variables can be referenced in the agentgateway configuration, such as
+[in my OpenRouter configuration](https://github.com/f4z3r/agentic-factory/blob/5a05c376d9c508332298bd65beff46b3ad0da68c/gateway/config.yaml#L16-L20).
+The `secrets/` directory is excluded from Git and never mounted into agent sandboxes. MCP-specific
+credentials are managed separately by their respective services.
+
+### MCP Servers
+
+There are several MCPs configured by default. These are there mostly for reference. You will want to
+remove the ones that you do not need. Moreover, for most of them to work (such as GitHub, Atlassian,
+and ArgoCD), you will need to provide credentials via the `secrets/` directory. I recommend starting
+only with the `basic-memory` MCP, which will work out of the box.
 
 ### Start the infrastructure
 
@@ -137,14 +156,57 @@ configuration, analytics, and request logs.
 
 ### Launch an agent
 
-From the project you want to work on:
+We dynamically mount host directories in order to ensure that session information and project
+specific memory is correctly handled by the harness. Thus we recommend defining the following
+functions in your configuration and calling these functions when a sandbox is needed. The functions
+will mount your git repository root as the project into the sandbox, or if no git project root is
+detected, the current directory. Only directories within your `$HOME` are supported.
+
+For bash:
 
 ```bash
-PI_WORKSPACE="$PWD" \
-  podman compose \
-    -f <path-to-compose.yaml> \
-    --profile agent \
-    run --rm pi
+pi-sandbox() {
+    local root project
+
+    root="$(git rev-parse --show-toplevel 2>/dev/null)" || root="$(pwd -P)"
+
+    case "$root" in
+        "$HOME"/*) project="${root#"$HOME"/}" ;;
+        *)
+            echo "Error: Project must be inside $HOME" >&2
+            return 1
+            ;;
+    esac
+
+    PI_WORKSPACE="$root" \
+    PI_PROJECT_NAME="$project" \
+        podman compose \
+            -f "$HOME/projects/agentic-factory/compose.yaml" \
+            --profile agent \
+            run --rm pi
+}
+```
+
+For fish:
+
+```fish
+function pi-sandbox
+    set -l root (git rev-parse --show-toplevel 2>/dev/null)
+    or set root (pwd -P)
+
+    if not string match -q -- "$HOME/*" "$root"
+        echo "Error: Project must be inside $HOME" >&2
+        return 1
+    end
+
+    set -l project (string replace -- "$HOME/" '' "$root")
+
+    env PI_WORKSPACE="$root" PI_PROJECT_NAME="$project" \
+        podman compose \
+        -f ~/projects/agentic-factory/compose.yaml \
+        --profile agent \
+        run --rm pi
+end
 ```
 
 Each invocation starts a new isolated Pi session. Run the command from different projects or

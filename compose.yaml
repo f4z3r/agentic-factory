@@ -19,6 +19,25 @@ services:
       - pi-backend
     security_opt:
       - no-new-privileges:true
+  mcp-memory:
+    image: ghcr.io/basicmachines-co/basic-memory:1.0.0
+    restart: unless-stopped
+    command:
+      - basic-memory
+      - mcp
+      - --transport
+      - streamable-http
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+    env_file:
+      - ./mcp/basic-memory/config.env
+    volumes:
+      - memory-data:/app/data
+      - memory-config:/home/appuser/.basic-memory
+    networks:
+      - pi-backend
   mcp-kubernetes:
     image: ghcr.io/containers/kubernetes-mcp-server:v0.1.3@sha256:6347155616c49c78512114500688b50d275ddde7597b6a38cefe6f40a8c42c16
     restart: unless-stopped
@@ -78,10 +97,10 @@ services:
     # HTTPS_PROXY: http://egress-proxy:3128
     # NO_PROXY: agentgateway
     tty: true
-    working_dir: /home/f4z3r/workspace
+    working_dir: /home/f4z3r/workspace/${PI_PROJECT_NAME:-default}
     command: ["pi"]
     volumes:
-      - ${PI_WORKSPACE:-./workspace}:/home/f4z3r/workspace
+      - ${PI_WORKSPACE:-./workspace}:/home/f4z3r/workspace/${PI_PROJECT_NAME:-default}
       - pi-state:/home/f4z3r/.pi/agent
       - ./sandbox/config/models.json:/home/f4z3r/.pi/agent/models.json:ro
       - ./sandbox/config/mcp.json:/home/f4z3r/.pi/agent/mcp.json:ro
@@ -103,3 +122,5 @@ volumes:
   pi-state: {}
   mise-data: {}
   agentgateway-data: {}
+  memory-data: {}
+  memory-config: {}

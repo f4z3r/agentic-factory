@@ -1,6 +1,6 @@
 # ADR 0001: Rootless sandbox with direct internet access
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Decision
 

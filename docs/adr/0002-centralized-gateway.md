@@ -1,6 +1,6 @@
 # ADR 0002: Centralize authenticated capabilities behind agentgateway
 
-**Status:** Proposed
+**Status:** Accepted
 
 ## Decision
 

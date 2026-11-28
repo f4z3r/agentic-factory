@@ -93,7 +93,7 @@ to the agent. Stronger restrictions on internal network access require additiona
 
 The following MCP servers are currently configured along with their purposes:
 
-- **basic-memory**: Manages long term memory for the agents.
+- **Basic Memory**: Manages long term memory for the agents.
 - **ArgoCD**: Manages deployments and application lifecycle for Kubernetes resources.
 - **Kubernetes**: Facilitates interaction with Kubernetes clusters, specifically for resource
   management.
@@ -133,7 +133,7 @@ credentials are managed separately by their respective services.
 There are several MCPs configured by default. These are there mostly for reference. You will want to
 remove the ones that you do not need. Moreover, for most of them to work (such as GitHub, Atlassian,
 and ArgoCD), you will need to provide credentials via the `secrets/` directory. I recommend starting
-only with the `basic-memory` MCP, which will work out of the box.
+only with the "Basic Memory" MCP, which will work out of the box.
 
 ### Start the infrastructure
 

@@ -82,10 +82,12 @@ service account with read-only RBAC permissions.
 network sandbox. Agents retain outbound internet access, and mounted workspace files are accessible
 to the agent. Stronger restrictions on internal network access require additional egress controls.
 
-> [!WARNING] Sandboxes are in the same network, meaning agents can technically talk to each other.
-> Moreover, agents share the same long-term memory MCP with each agent having access to all memory.
-> Thus, they can also communicate over that memory layer even if deployed in isolated networks. DO
-> NOT assume isolation between agents.
+<!-- prettier-ignore -->
+> [!WARNING]
+>Sandboxes are in the same network, meaning agents can technically talk to each other. Moreover,
+>agents share the same long-term memory MCP with each agent having access to all memory. Thus, they
+>can also communicate over that memory layer even if deployed in isolated networks. DO NOT assume
+>isolation between agents.
 
 ## MCP Servers
 
